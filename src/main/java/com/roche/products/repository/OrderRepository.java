@@ -11,6 +11,5 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends MongoRepository<OrderEntity, String> {
 
-    @Query("{ created: {$gte: new ISODate('?0'), $lte: new ISODate('?1')} }")
     List<OrderEntity> findByCreatedDateBetween(LocalDateTime from, LocalDateTime to);
 }
