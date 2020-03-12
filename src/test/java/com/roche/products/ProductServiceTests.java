@@ -38,7 +38,7 @@ public class ProductServiceTests {
     @Test
     public void getAllTest() {
         List<ProductEntity> allProducts = generateMockData();
-        when(productRepositoryMock.findAllNotDeleted()).thenReturn(allProducts);
+        when(productRepositoryMock.findByIsDeletedFalse()).thenReturn(allProducts);
 
         ProductEntity expected = allProducts.get(allProducts.size() - 1);
         ProductDto anyProduct = productService.getAll().get(allProducts.size() - 1);

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Service class implementing the CRUD API logic to manage Product entities
+ * Service class implementation for the CRUD API logic to manage Product entities
  */
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class ProductService {
      * @return a list of {@link ProductDto} objects
      */
     public List<ProductDto> getAll() {
-        return productRepository.findAllNotDeleted().stream()
+        return productRepository.findByIsDeletedFalse().stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
