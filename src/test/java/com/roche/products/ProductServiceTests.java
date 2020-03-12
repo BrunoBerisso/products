@@ -3,6 +3,7 @@ package com.roche.products;
 import com.roche.products.domain.ProductEntity;
 import com.roche.products.repository.ProductRepository;
 import com.roche.products.rest.dto.ProductDto;
+import com.roche.products.rest.dto.UpdateProductRequestDto;
 import com.roche.products.rest.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -51,8 +54,40 @@ public class ProductServiceTests {
         assertEqualProduct(newProduct, result);
     }
 
+    @Test
+    public void updateProductTest() {
+        String newName = "New Name";
+        BigDecimal newPrice = new BigDecimal(1234);
+
+        ProductEntity newProduct = generateMockData().get(0);
+        newProduct.setName(newName);
+        newProduct.setPrice(newPrice);
+
+        when(productRepositoryMock.findById(eq(newProduct.getId()))).thenReturn(java.util.Optional.of(newProduct));
+        when(productRepositoryMock.save(any())).thenReturn(newProduct);
+
+        UpdateProductRequestDto requestDto = UpdateProductRequestDto.builder()
+                .name(newName)
+                .price(newPrice)
+                .build();
+        ProductDto result = productService.updateProduct(newProduct.getId(), requestDto);
+        assertEqualProduct(newProduct, result);
+    }
+
+    @Test
+    public void deleteProductTest() {
+        ProductEntity newProduct = generateMockData().get(0);
+
+        when(productRepositoryMock.findById(eq(newProduct.getId()))).thenReturn(java.util.Optional.of(newProduct));
+        when(productRepositoryMock.save(any())).thenReturn(newProduct);
+
+        ProductDto result = productService.deleteProduct(newProduct.getId());
+        assertTrue(newProduct.getIsDeleted());
+        assertEqualProduct(newProduct, result);
+    }
+
     private List<ProductEntity> generateMockData() {
-        return IntStream.range(1, 10)
+        return IntStream.range(1, 5)
                 .mapToObj(i -> ProductEntity.builder()
                         .id("just_added_sku_" + i)
                         .name("John Due - " + i)

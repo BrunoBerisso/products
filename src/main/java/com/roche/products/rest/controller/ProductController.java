@@ -1,13 +1,16 @@
 package com.roche.products.rest.controller;
 
 import com.roche.products.rest.dto.ProductDto;
+import com.roche.products.rest.dto.UpdateProductRequestDto;
 import com.roche.products.rest.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -43,5 +46,27 @@ public class ProductController {
             @PathVariable(value = "price")
             BigDecimal price) {
         return productService.addProduct(name, price);
+    }
+
+    @ApiOperation(value = "Update a product information")
+    @RequestMapping(value = "/{sku}", method = RequestMethod.PATCH, produces = APPLICATION_JSON_VALUE)
+    public ProductDto updateProduct(
+            @ApiParam(name = "sku", value = "The SKU (unique id) of the product to update", required = true)
+            @PathVariable(value = "sku")
+            String sku,
+            @ApiParam(name = "updateRequest", value = "The fields to be updated for the product")
+            @RequestBody(required = true)
+            @Validated
+            UpdateProductRequestDto requestDto) {
+        return productService.updateProduct(sku, requestDto);
+    }
+
+    @ApiOperation(value = "Mark a Product as deleted")
+    @RequestMapping(value = "/{sku}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
+    public ProductDto deleteProduct(
+            @ApiParam(name = "sku", value = "The SKU (unique id) of the product to delete", required = true)
+            @PathVariable(value = "sku")
+            String sku) {
+        return productService.deleteProduct(sku);
     }
 }

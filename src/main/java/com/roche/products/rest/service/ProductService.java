@@ -1,8 +1,10 @@
 package com.roche.products.rest.service;
 
 import com.roche.products.domain.ProductEntity;
+import com.roche.products.exception.ProductNotFoundException;
 import com.roche.products.repository.ProductRepository;
 import com.roche.products.rest.dto.ProductDto;
+import com.roche.products.rest.dto.UpdateProductRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +51,47 @@ public class ProductService {
 
         entity = productRepository.insert(entity);
         return mapToDto(entity);
+    }
+
+    /**
+     * Update the information specified by the object {@link UpdateProductRequestDto} on the Product
+     * with the given SKU
+     *
+     * @param sku The SKU (unique id) of the Product to update
+     * @param requestDto The requested fields to upde
+     * @return The modified Product saved in the database
+     * @throws ProductNotFoundException If the SKU isn't found in the database
+     */
+    public ProductDto updateProduct(String sku, UpdateProductRequestDto requestDto) throws ProductNotFoundException {
+        ProductEntity productEntity = productRepository.findById(sku)
+                .orElseThrow(ProductNotFoundException::new);
+
+        if (requestDto.getName() != null) {
+            productEntity.setName(requestDto.getName());
+        }
+
+        if (requestDto.getPrice() != null) {
+            productEntity.setPrice(requestDto.getPrice());
+        }
+
+        productRepository.save(productEntity);
+        return mapToDto(productEntity);
+    }
+
+    /**
+     * Mark a Product as deleted (soft delete)
+     * @param sku The unique id of the Product to delete
+     * @return The deleted Product saved in the database
+     * @throws ProductNotFoundException If the SKU isn't found in the database
+     */
+    public ProductDto deleteProduct(String sku) throws ProductNotFoundException {
+        ProductEntity productEntity = productRepository.findById(sku)
+                .orElseThrow(ProductNotFoundException::new);
+
+        productEntity.setIsDeleted(true);
+        productRepository.save(productEntity);
+
+        return mapToDto(productEntity);
     }
 
     /**
