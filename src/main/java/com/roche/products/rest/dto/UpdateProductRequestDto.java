@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Validated
 @Data
 @Builder
-@ApiModel(description = "Holds the information to by updated for a Product passed though the API.")
+@ApiModel(description = "The information to by updated for a Product passed though the API.")
 public class UpdateProductRequestDto {
 
     @ApiModelProperty(value = "A new name for the Product")
