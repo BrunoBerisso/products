@@ -1,4 +1,4 @@
-package com.roche.products.rest.dto;
+package com.roche.products.rest.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(description = "Order definition used through the API.")
-public class OrderDto {
+public class OrderResponseDto {
 
     @ApiModelProperty(value = "Id that uniquely identify an order.")
     @JsonProperty(value = "id")
@@ -27,7 +27,7 @@ public class OrderDto {
 
     @ApiModelProperty(value = "Products on this order.")
     @JsonProperty(value = "products")
-    private List<ProductDto> products;
+    private List<ProductResponseDto> products;
 
     @ApiModelProperty(value = "Total price at the time of when the order was placed." +
             "This might not be equal to the sum of all the product prices if a product price change" +

@@ -6,10 +6,10 @@ import com.roche.products.domain.ProductReferenceEntity;
 import com.roche.products.exception.ProductNotFoundException;
 import com.roche.products.repository.OrderRepository;
 import com.roche.products.repository.ProductRepository;
-import com.roche.products.rest.dto.GetOrdersRequestDto;
-import com.roche.products.rest.dto.OrderDto;
-import com.roche.products.rest.dto.PlaceOrderRequestDto;
-import com.roche.products.rest.dto.ProductDto;
+import com.roche.products.rest.dto.request.GetOrdersRequestDto;
+import com.roche.products.rest.dto.response.OrderResponseDto;
+import com.roche.products.rest.dto.request.PlaceOrderRequestDto;
+import com.roche.products.rest.dto.response.ProductResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,14 +29,15 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    public List<OrderDto> getOrders(GetOrdersRequestDto ordersFilter) {
+    public List<OrderResponseDto> getOrders(GetOrdersRequestDto ordersFilter) {
+        //FIXME: date filtering needs some special attention for MongoDB
 //        return orderRepository.findByCreatedDateBetween(
         return orderRepository.findAll().stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
 
-    public OrderDto placeOrder(PlaceOrderRequestDto orderRequest) {
+    public OrderResponseDto placeOrder(PlaceOrderRequestDto orderRequest) {
         Iterable<ProductEntity> productEntities = productRepository.findAllById(
                 orderRequest.getProductsIds());
 
@@ -63,7 +64,7 @@ public class OrderService {
         return mapToDto(orderEntity);
     }
 
-    private OrderDto mapToDto(OrderEntity entity) {
+    private OrderResponseDto mapToDto(OrderEntity entity) {
 
         List<String> productRefIds = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -73,14 +74,14 @@ public class OrderService {
             total = total.add(productRef.getPrice());
         }
 
-        List<ProductDto> products = new ArrayList<>();
+        List<ProductResponseDto> products = new ArrayList<>();
         Iterable<ProductEntity> productEntities = productRepository.findAllById(productRefIds);
 
         for(ProductEntity productEntity : productEntities) {
             products.add(mapToDto(productEntity));
         }
 
-        return OrderDto.builder()
+        return OrderResponseDto.builder()
                 .id(entity.getId())
                 .buyerEmail(entity.getBuyerEmail())
                 .products(products)
@@ -89,12 +90,12 @@ public class OrderService {
     }
 
     /**
-     * Utility method to create a {@link ProductDto} object from a {@link ProductEntity}.
+     * Utility method to create a {@link ProductResponseDto} object from a {@link ProductEntity}.
      * @param entity The {@link ProductEntity} to map
-     * @return the result of mapping the {@link ProductEntity} to a {@link ProductDto}
+     * @return the result of mapping the {@link ProductEntity} to a {@link ProductResponseDto}
      */
-    private ProductDto mapToDto(ProductEntity entity) {
-        return ProductDto.builder()
+    private ProductResponseDto mapToDto(ProductEntity entity) {
+        return ProductResponseDto.builder()
                 .sku(entity.getId())
                 .name(entity.getName())
                 .price(entity.getPrice())

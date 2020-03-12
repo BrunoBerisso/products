@@ -2,8 +2,8 @@ package com.roche.products;
 
 import com.roche.products.domain.ProductEntity;
 import com.roche.products.repository.ProductRepository;
-import com.roche.products.rest.dto.ProductDto;
-import com.roche.products.rest.dto.UpdateProductRequestDto;
+import com.roche.products.rest.dto.response.ProductResponseDto;
+import com.roche.products.rest.dto.request.UpdateProductRequestDto;
 import com.roche.products.rest.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ public class ProductServiceTests {
         when(productRepositoryMock.findByIsDeletedFalse()).thenReturn(allProducts);
 
         ProductEntity expected = allProducts.get(allProducts.size() - 1);
-        ProductDto anyProduct = productService.getAll().get(allProducts.size() - 1);
+        ProductResponseDto anyProduct = productService.getAll().get(allProducts.size() - 1);
         assertEqualProduct(expected, anyProduct);
     }
 
@@ -50,7 +50,7 @@ public class ProductServiceTests {
         ProductEntity newProduct = generateMockData().get(0);
         when(productRepositoryMock.insert((ProductEntity) any())).thenReturn(newProduct);
 
-        ProductDto result = productService.addProduct(newProduct.getName(), newProduct.getPrice());
+        ProductResponseDto result = productService.addProduct(newProduct.getName(), newProduct.getPrice());
         assertEqualProduct(newProduct, result);
     }
 
@@ -70,7 +70,7 @@ public class ProductServiceTests {
                 .name(newName)
                 .price(newPrice)
                 .build();
-        ProductDto result = productService.updateProduct(newProduct.getId(), requestDto);
+        ProductResponseDto result = productService.updateProduct(newProduct.getId(), requestDto);
         assertEqualProduct(newProduct, result);
     }
 
@@ -81,7 +81,7 @@ public class ProductServiceTests {
         when(productRepositoryMock.findById(eq(newProduct.getId()))).thenReturn(java.util.Optional.of(newProduct));
         when(productRepositoryMock.save(any())).thenReturn(newProduct);
 
-        ProductDto result = productService.deleteProduct(newProduct.getId());
+        ProductResponseDto result = productService.deleteProduct(newProduct.getId());
         assertTrue(newProduct.getIsDeleted());
         assertEqualProduct(newProduct, result);
     }
@@ -98,7 +98,7 @@ public class ProductServiceTests {
                 .collect(Collectors.toList());
     }
 
-    private void assertEqualProduct(ProductEntity expected, ProductDto actual) {
+    private void assertEqualProduct(ProductEntity expected, ProductResponseDto actual) {
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getPrice(), actual.getPrice());
         assertEquals(expected.getId(), actual.getSku());

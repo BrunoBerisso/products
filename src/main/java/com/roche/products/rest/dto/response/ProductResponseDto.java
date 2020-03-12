@@ -1,4 +1,4 @@
-package com.roche.products.rest.dto;
+package com.roche.products.rest.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(description = "Product definition use though the API")
-public class ProductDto {
+public class ProductResponseDto {
 
     @ApiModelProperty(value = "Id that uniquely identify a product")
     @JsonProperty(value = "sku")

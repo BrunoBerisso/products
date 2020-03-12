@@ -3,8 +3,8 @@ package com.roche.products.rest.service;
 import com.roche.products.domain.ProductEntity;
 import com.roche.products.exception.ProductNotFoundException;
 import com.roche.products.repository.ProductRepository;
-import com.roche.products.rest.dto.ProductDto;
-import com.roche.products.rest.dto.UpdateProductRequestDto;
+import com.roche.products.rest.dto.response.ProductResponseDto;
+import com.roche.products.rest.dto.request.UpdateProductRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +24,9 @@ public class ProductService {
 
     /**
      * This method finds all Products in the database that are not deleted (deleted: false)
-     * @return a list of {@link ProductDto} objects
+     * @return a list of {@link ProductResponseDto} objects
      */
-    public List<ProductDto> getAll() {
+    public List<ProductResponseDto> getAll() {
         return productRepository.findByIsDeletedFalse().stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
@@ -40,9 +40,9 @@ public class ProductService {
      * @param name A String to be used as Product name
      * @param price A BigDecimal number to set as the price
      *
-     * @return the newly created {@link ProductDto} object
+     * @return the newly created {@link ProductResponseDto} object
      */
-    public ProductDto addProduct(String name, BigDecimal price) {
+    public ProductResponseDto addProduct(String name, BigDecimal price) {
         ProductEntity entity = ProductEntity.builder()
                 .name(name)
                 .price(price)
@@ -62,7 +62,7 @@ public class ProductService {
      * @return The modified Product saved in the database
      * @throws ProductNotFoundException If the SKU isn't found in the database
      */
-    public ProductDto updateProduct(String sku, UpdateProductRequestDto requestDto) throws ProductNotFoundException {
+    public ProductResponseDto updateProduct(String sku, UpdateProductRequestDto requestDto) throws ProductNotFoundException {
         ProductEntity productEntity = productRepository.findById(sku)
                 .orElseThrow(ProductNotFoundException::new);
 
@@ -84,7 +84,7 @@ public class ProductService {
      * @return The deleted Product saved in the database
      * @throws ProductNotFoundException If the SKU isn't found in the database
      */
-    public ProductDto deleteProduct(String sku) throws ProductNotFoundException {
+    public ProductResponseDto deleteProduct(String sku) throws ProductNotFoundException {
         ProductEntity productEntity = productRepository.findById(sku)
                 .orElseThrow(ProductNotFoundException::new);
 
@@ -95,12 +95,12 @@ public class ProductService {
     }
 
     /**
-     * Utility method to create a {@link ProductDto} object from a {@link ProductEntity}.
+     * Utility method to create a {@link ProductResponseDto} object from a {@link ProductEntity}.
      * @param entity The {@link ProductEntity} to map
-     * @return the result of mapping the {@link ProductEntity} to a {@link ProductDto}
+     * @return the result of mapping the {@link ProductEntity} to a {@link ProductResponseDto}
      */
-    private ProductDto mapToDto(ProductEntity entity) {
-        return ProductDto.builder()
+    private ProductResponseDto mapToDto(ProductEntity entity) {
+        return ProductResponseDto.builder()
                 .sku(entity.getId())
                 .name(entity.getName())
                 .price(entity.getPrice())

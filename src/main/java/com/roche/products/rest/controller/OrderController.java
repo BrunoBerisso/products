@@ -1,8 +1,8 @@
 package com.roche.products.rest.controller;
 
-import com.roche.products.rest.dto.GetOrdersRequestDto;
-import com.roche.products.rest.dto.OrderDto;
-import com.roche.products.rest.dto.PlaceOrderRequestDto;
+import com.roche.products.rest.dto.request.GetOrdersRequestDto;
+import com.roche.products.rest.dto.response.OrderResponseDto;
+import com.roche.products.rest.dto.request.PlaceOrderRequestDto;
 import com.roche.products.rest.service.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +28,7 @@ public class OrderController {
 
     @ApiOperation(value = "Retrieve all Orders in the given time period")
     @RequestMapping(value = "/find", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public List<OrderDto> getOrders(
+    public List<OrderResponseDto> getOrders(
             @ApiParam(name = "ordersFilter", value = "The criteria used to filter the orders", required = true)
             @RequestBody(required = true)
             @Validated
@@ -38,7 +38,7 @@ public class OrderController {
 
     @ApiOperation(value = "Place a new Order with the given products")
     @RequestMapping(method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public OrderDto placeOrder(
+    public OrderResponseDto placeOrder(
             @ApiParam(name = "orderRequest", value = "The details about the new order", required = true)
             @RequestBody(required = true)
             @Validated

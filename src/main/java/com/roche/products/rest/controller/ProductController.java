@@ -1,7 +1,7 @@
 package com.roche.products.rest.controller;
 
-import com.roche.products.rest.dto.ProductDto;
-import com.roche.products.rest.dto.UpdateProductRequestDto;
+import com.roche.products.rest.dto.response.ProductResponseDto;
+import com.roche.products.rest.dto.request.UpdateProductRequestDto;
 import com.roche.products.rest.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,13 +32,13 @@ public class ProductController {
     @ApiOperation(value = "Return all the products present in the database")
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public List<ProductDto> getAll() {
+    public List<ProductResponseDto> getAll() {
         return productService.getAll();
     }
 
     @ApiOperation(value = "Add a new product")
     @RequestMapping(value = "/{name}/{price}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ProductDto addProduct(
+    public ProductResponseDto addProduct(
             @ApiParam(name = "name", value = "Descriptive product name", required = true)
             @PathVariable(value = "name")
             String name,
@@ -50,7 +50,7 @@ public class ProductController {
 
     @ApiOperation(value = "Update a product information")
     @RequestMapping(value = "/{sku}", method = RequestMethod.PATCH, produces = APPLICATION_JSON_VALUE)
-    public ProductDto updateProduct(
+    public ProductResponseDto updateProduct(
             @ApiParam(name = "sku", value = "The SKU (unique id) of the product to update", required = true)
             @PathVariable(value = "sku")
             String sku,
@@ -63,7 +63,7 @@ public class ProductController {
 
     @ApiOperation(value = "Mark a Product as deleted")
     @RequestMapping(value = "/{sku}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
-    public ProductDto deleteProduct(
+    public ProductResponseDto deleteProduct(
             @ApiParam(name = "sku", value = "The SKU (unique id) of the product to delete", required = true)
             @PathVariable(value = "sku")
             String sku) {
