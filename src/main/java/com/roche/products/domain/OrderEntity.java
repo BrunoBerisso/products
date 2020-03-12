@@ -24,5 +24,5 @@ public class OrderEntity {
     private LocalDateTime createdDate;
 
     @Field("products")
-    private List<ProductReferenceEntity> products;
+    private List<OrderLineEntity> products;
 }
