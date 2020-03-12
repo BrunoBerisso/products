@@ -70,7 +70,7 @@ public class OrderService {
         BigDecimal total = BigDecimal.ZERO;
 
         for (ProductReferenceEntity productRef : entity.getProducts()) {
-            productRefIds.add(productRef.getId());
+            productRefIds.add(productRef.getProductId());
             total = total.add(productRef.getPrice());
         }
 
